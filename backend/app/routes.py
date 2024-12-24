@@ -5,6 +5,9 @@ from flask import Blueprint, request, jsonify
 from .scraping.scraper import scrape_website
 from .scraping.nlp_analysis import categorize_content
 from .scraping.ml_models import predict_learning_style
+from functools import wraps
+from flask import Blueprint, request, jsonify
+from firebase_admin import auth, firestore
 
 db = firestore.client()
 main = Blueprint("main", __name__)
@@ -87,6 +90,21 @@ def analyze_website():
     })
 
 @main.route("/dashboard/<user_id>", methods=["GET"])
+def firebase_auth_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        id_token = request.headers.get("Authorization")
+        if not id_token:
+            return jsonify({"error": "Authorization header missing"}), 401
+        
+        try:
+            decoded_token = auth.verify_id_token(id_token)
+            request.user = decoded_token
+        except Exception as e:
+            return jsonify({"error": "Invalid token"}), 401
+        
+        return f(*args, **kwargs)
+    return decorated_function
 def dashboard(user_id):
     activities_ref = db.collection("users").document(user_id).collection("activities")
     activities = [doc.to_dict() for doc in activities_ref.stream()]
@@ -104,5 +122,9 @@ def dashboard(user_id):
     return jsonify({
         "topic_counts": topic_counts,
         "learning_styles": learning_styles,
-        "total_activities": len(activities)
+        "total_activities": len(activities),
+        "message": f"Welcome, {request.user['email']}"
     })
+
+
+
