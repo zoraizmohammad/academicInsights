@@ -1,5 +1,6 @@
 
-# **AcademicInsights: A Template Web Extension using NLP and Behavioral Data for EdTech Research**
+# **AcademicInsights**
+## A Template Web Extension using NLP and Behavioral Data for EdTech Research
 
 ## **Overview**
 
