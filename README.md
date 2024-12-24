@@ -142,6 +142,7 @@ frontend/
 ### **5. Deployment**
 
 #### **Backend Deployment**
+For more detailed deployment instructions with more details about how to setup using various Backend hosting services, please for [here](https://github.com/zoraizmohammad/academicInsights/blob/0fdf09d4e04d48ee14b7eb02042c2c7459edb417/backendnstructions.md)
 - Deploy the backend using **Heroku**, **AWS**, or **Google Cloud Run**.
 - Update `frontend/popup.js` with the deployed backend URL:
    ```javascript
